@@ -10,18 +10,29 @@ import useFetch from "../../hooks/useFetch";
 
 const List = () => {
   const location = useLocation();
-  const [destination, setDestination] = useState(location.state.destination);
-  const [dates, setDates] = useState(location.state.dates);
+  // const [destination, setDestination] = useState(location.state.destination);
+  // const [dates, setDates] = useState(location.state.dates);
+  // const [options, setOptions] = useState(location.state.options);
+  const [destination, setDestination] = useState(location.state?.destination || "");
+  const [dates, setDates] = useState(location.state?.dates || [{ startDate: new Date(), endDate: new Date(), key: "selection" }]);
+  const [options, setOptions] = useState(location.state?.options || { adult: 1, children: 0, room: 1 });
   const [openDate, setOpenDate] = useState(false);
-  const [options, setOptions] = useState(location.state.options);
-  const [min, setMin] = useState(undefined);
-  const [max, setMax] = useState(undefined);
+  const [min, setMin] = useState(0);
+  const [max, setMax] = useState(999);
 
   const { data, loading, error, reFetch } = useFetch(
-    `/hotels?city=${destination}&min=${min || 0}&max=${max || 999}`
+     `/hotels?city=${destination}&min=${min}&max=${max}`
   );
 
   const handleClick = () => {
+    //kiểm tra giá
+    console.log("Min Price:", min);
+    console.log("Max Price:", max);
+    // Tùy chọn kiểm tra giá min và max
+    if (min > max) {
+      alert("Giá tối thiểu không thể lớn hơn Giá tối đa");
+      return;
+    }
     reFetch();
   };
 
