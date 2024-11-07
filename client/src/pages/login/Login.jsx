@@ -12,7 +12,7 @@ const Login = () => {
 
   const { loading, error, dispatch } = useContext(AuthContext);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setCredentials((prev) => ({ ...prev, [e.target.id]: e.target.value }));
@@ -24,7 +24,7 @@ const Login = () => {
     try {
       const res = await axios.post("/auth/login", credentials);
       dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
-      navigate("/")
+      navigate("/");
     } catch (err) {
       dispatch({ type: "LOGIN_FAILURE", payload: err.response.data });
     }
@@ -72,33 +72,30 @@ const Login = () => {
   };
 
   return (
-    <div 
+    <div
       className="khung-dang-nhap"
       style={{ backgroundImage: "url('/assets/images/nen.png')" }}
     >
       <div className="hop-dang-nhap">
         <h1 className="tieu-de-dang-nhap">Đăng nhập</h1>
-        
+
         <div className="khung-nut-mxh">
-          <button 
+          <button
             className="nut-mxh nut-facebook"
             onClick={handleFacebookLogin}
           >
-            <img 
-              src="/assets/images/facebook1.png" 
-              alt="Facebook" 
-              className="icon-mxh" 
+            <img
+              src="/assets/images/facebook1.png"
+              alt="Facebook"
+              className="icon-mxh"
             />
             <span className="text-nut-mxh">Facebook</span>
           </button>
-          <button 
-            className="nut-mxh nut-google"
-            onClick={handleGoogleLogin}
-          >
-            <img 
-              src="/assets/images/google.png" 
-              alt="Google" 
-              className="icon-mxh" 
+          <button className="nut-mxh nut-google" onClick={handleGoogleLogin}>
+            <img
+              src="/assets/images/google.png"
+              alt="Google"
+              className="icon-mxh"
             />
             <span className="text-nut-mxh">Google</span>
           </button>
@@ -119,7 +116,7 @@ const Login = () => {
                 className="o-nhap-lieu"
               />
             </div>
-            
+
             <div className="nhom-truong-nhap">
               <input
                 type="password"
@@ -131,8 +128,8 @@ const Login = () => {
             </div>
 
             <div className="quen-mat-khau">
-              <a 
-                href="#" 
+              <a
+                href="#"
                 className="lien-ket-quen-mk"
                 onClick={(e) => {
                   e.preventDefault();
@@ -143,19 +140,27 @@ const Login = () => {
               </a>
             </div>
 
-            <button 
-              disabled={loading} 
-              onClick={handleClick} 
+            <button
+              disabled={loading}
+              onClick={handleClick}
               className="nut-dang-nhap"
             >
               {loading ? "Đang xử lý..." : "Đăng nhập"}
             </button>
 
-            {error && <span style={{color: 'red', textAlign: 'center', display: 'block'}}>{error.message}</span>}
+            {error && (
+              <span
+                style={{ color: "red", textAlign: "center", display: "block" }}
+              >
+                {error.message}
+              </span>
+            )}
 
             <div className="khung-dang-ky">
               Chưa có tài khoản?
-              <Link to="/register" className="lien-ket-dang-ky">Đăng ký ngay</Link>
+              <Link to="/singUp" className="lien-ket-dang-ky">
+                Đăng ký ngay
+              </Link>
             </div>
           </form>
         ) : (
@@ -176,14 +181,20 @@ const Login = () => {
             </button>
 
             {resetMessage && (
-              <span style={{color: resetMessage.includes("lỗi") ? 'red' : 'green', textAlign: 'center', display: 'block'}}>
+              <span
+                style={{
+                  color: resetMessage.includes("lỗi") ? "red" : "green",
+                  textAlign: "center",
+                  display: "block",
+                }}
+              >
                 {resetMessage}
               </span>
             )}
 
             <div className="quen-mat-khau">
-              <a 
-                href="#" 
+              <a
+                href="#"
                 className="lien-ket-quen-mk"
                 onClick={(e) => {
                   e.preventDefault();
