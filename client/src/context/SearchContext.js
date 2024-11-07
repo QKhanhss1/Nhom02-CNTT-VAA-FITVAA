@@ -1,12 +1,18 @@
 import { createContext, useReducer } from "react";
 
 const INITIAL_STATE = {
-  city: undefined,
-  dates: [],
+  destination: "",
+  dates: [
+    {
+      startDate: new Date(),
+      endDate: new Date(),
+      key: "selection",
+    },
+  ],
   options: {
-    adult: undefined,
-    children: undefined,
-    room: undefined,
+    adult: 1,
+    children: 0,
+    room: 1,
   },
 };
 
@@ -16,8 +22,10 @@ const SearchReducer = (state, action) => {
   switch (action.type) {
     case "NEW_SEARCH":
       return action.payload;
-    case "RESET_SEARCH":
-      return INITIAL_STATE;
+    case "UPDATE_DESTINATION":
+      return { ...state, destination: action.payload };
+    case "UPDATE_DATES":
+      return { ...state, dates: action.payload };
     default:
       return state;
   }
@@ -29,7 +37,7 @@ export const SearchContextProvider = ({ children }) => {
   return (
     <SearchContext.Provider
       value={{
-        city: state.city,
+        destination: state.destination,
         dates: state.dates,
         options: state.options,
         dispatch,
@@ -39,22 +47,3 @@ export const SearchContextProvider = ({ children }) => {
     </SearchContext.Provider>
   );
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
