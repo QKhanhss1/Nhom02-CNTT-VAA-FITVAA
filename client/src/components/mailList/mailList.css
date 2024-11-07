@@ -1,3 +1,8 @@
+*{
+  margin:0;
+  padding:0;
+}
+
 .mail{
   width: 100%;
   margin-top: 50px;
@@ -7,7 +12,7 @@
   flex-direction: column;
   align-items: center;
   gap: 20px;
-  padding: 50px;
+  padding: 50px 0 50px 0;
 }
 
 .mailInputContainer>input{
