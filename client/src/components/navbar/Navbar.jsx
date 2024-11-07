@@ -1,17 +1,22 @@
 import "./navbar.css";
-import { Link } from "react-router-dom";
-import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
+
 const Navbar = () => {
-  const { user } = useContext(AuthContext);
+  const { user, dispatch } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handleRegister = () => {
-    navigate("/singUp");
+    navigate("/signUp");
   };
   const handleLogin = () => {
     navigate("/login");
+  };
+  const handleLogout = () => {
+    dispatch({ type: "LOGOUT" });
+    navigate("/"); 
   };
 
   return (
@@ -21,7 +26,21 @@ const Navbar = () => {
           <span className="logo">SECONDBOOKING</span>
         </Link>
         {user ? (
-          user.username
+          <div className="userMenu">
+            <span
+              className="userName"
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+            >
+              {user.username}
+            </span>
+            {dropdownOpen && (
+              <div className="dropdownMenu">
+                <button className="logoutButton" onClick={handleLogout}>
+                  Đăng xuất
+                </button>
+              </div>
+            )}
+          </div>
         ) : (
           <div className="navItems">
             <button className="navButton" onClick={handleRegister}>
