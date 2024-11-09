@@ -13,10 +13,25 @@ dotenv.config();
 
 const connect = async () => {
   try {
-    await mongoose.connect(process.env.MONGO);
-    console.log("Connected to mongoDB.");
+    //   await mongoose.connect(process.env.MONGO);
+    //   console.log("Connected to mongoDB.");
+    // } catch (error) {
+    //   throw error;
+    // }
+    const conn = await mongoose.connect(process.env.MONGO, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("Connected to MongoDB:", conn.connection.host);
+
+    // Log để kiểm tra connection string
+    console.log("MongoDB URI:", process.env.MONGO);
+
+    // Log trạng thái kết nối
+    console.log("Connection state:", mongoose.connection.readyState);
   } catch (error) {
-    throw error;
+    console.error("MongoDB connection error:", error);
+    process.exit(1); // Thoát ứng dụng nếu không kết nối được DB
   }
 };
 
@@ -25,8 +40,8 @@ mongoose.connection.on("disconnected", () => {
 });
 
 //middlewares
-app.use(cors())
-app.use(cookieParser())
+app.use(cors());
+app.use(cookieParser());
 app.use(express.json());
 
 app.use("/api/auth", authRoute);

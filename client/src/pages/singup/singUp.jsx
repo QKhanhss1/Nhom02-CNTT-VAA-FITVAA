@@ -1,16 +1,23 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./singUp.css";
+import axios from "axios";
 
 function SingUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+
+  const [phone, setPhone] = useState("");
+
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const [emptyError, setEmptyError] = useState("");
   const [loginError, setLoginError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Reset các thông báo
@@ -22,9 +29,70 @@ function SingUp() {
       setEmptyError("Vui lòng điền đầy đủ thông tin!");
       return;
     }
-
-    setSuccessMessage("Đăng nhập thành công!");
+    if (password !== confirmPassword) {
+      setLoginError("Mật khẩu xác nhận không khớp!");
+      return;
+    }
+    try {
+      const userData = {
+        username,
+        email,
+        phone,
+        password,
+      };
+      console.log("Sending user data:", {
+        username: userData.username,
+        email: userData.email,
+        phone: userData.phone,
+      });
+      const response = await axios.post(
+        "http://localhost:8800/api/auth/register",
+        userData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("Response:", response.data);
+      if (response.data) {
+        setSuccessMessage("Đăng ký thành công!");
+        // Chờ 1 giây rồi chuyển sang trang đăng nhập
+        setTimeout(() => {
+          navigate("/login");
+        }, 1000);
+      }
+    } catch (error) {
+      console.error("Error details:", error);
+      if (error.response) {
+        console.log("Error response:", error.response.data);
+        // Lỗi từ server
+        setLoginError(
+          error.response.data.message || "Đăng ký thất bại. Vui lòng thử lại!"
+        );
+      } else {
+        // Lỗi kết nối
+        setLoginError("Không thể kết nối đến server!");
+      }
+    }
   };
+  // Thêm useEffect để reset data khi component mount
+  useEffect(() => {
+    // Reset form khi component mount
+    const resetForm = () => {
+      setEmail("");
+      setPassword("");
+      setUsername("");
+      setPhone("");
+      setConfirmPassword("");
+      setEmptyError("");
+      setLoginError("");
+      setSuccessMessage("");
+    };
+
+    resetForm();
+    // Xóa dòng window.location.reload(true)
+  }, []);
 
   return (
     <div
@@ -55,7 +123,8 @@ function SingUp() {
               type="text"
               placeholder="Tên đăng nhập"
               className="o-nhap-lieu"
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setUsername(e.target.value)}
+              autocomplete="username"
             />
           </div>
 
@@ -65,6 +134,7 @@ function SingUp() {
               placeholder="Email"
               className="o-nhap-lieu"
               onChange={(e) => setEmail(e.target.value)}
+              autocomplete="email"
             />
           </div>
 
@@ -73,7 +143,8 @@ function SingUp() {
               type="text"
               placeholder="Số điện thoại"
               className="o-nhap-lieu"
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setPhone(e.target.value)}
+              autocomplete="tel"
             />
           </div>
 
@@ -83,6 +154,7 @@ function SingUp() {
               placeholder="Mật khẩu"
               className="o-nhap-lieu"
               onChange={(e) => setPassword(e.target.value)}
+              autocomplete="new-password"
             />
           </div>
 
@@ -91,7 +163,8 @@ function SingUp() {
               type="password"
               placeholder="Xác nhận lại mật khẩu"
               className="o-nhap-lieu"
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              autocomplete="new-password"
             />
           </div>
 

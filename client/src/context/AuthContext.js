@@ -34,6 +34,12 @@ const AuthReducer = (state, action) => {
         loading: false,
         error: null,
       };
+    case "RESET_AUTH":  // Thêm case mới
+      return {
+        user: null,
+        loading: false,
+        error: null,
+      };  
     default:
       return state;
   }
@@ -41,6 +47,12 @@ const AuthReducer = (state, action) => {
 
 export const AuthContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AuthReducer, INITIAL_STATE);
+  useEffect(() => {
+    // Thêm effect để reset khi component mount
+    localStorage.clear();
+    dispatch({ type: "RESET_AUTH" });
+    console.log("Auth state reset"); // Debug log
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("user", JSON.stringify(state.user));

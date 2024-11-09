@@ -20,13 +20,34 @@ const Login = () => {
 
   const handleClick = async (e) => {
     e.preventDefault();
-    dispatch({ type: "LOGIN_START" });
+    //   dispatch({ type: "LOGIN_START" });
+    //   try {
+    //     const res = await axios.post("/auth/login", credentials);
+    //     dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
+    //     navigate("/");
+    //   } catch (err) {
+    //     dispatch({ type: "LOGIN_FAILURE", payload: err.response.data });
+    //   }
+    // };
     try {
-      const res = await axios.post("/auth/login", credentials);
-      dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
-      navigate("/");
+      const response = await axios.post(
+        "http://localhost:8800/api/auth/login",
+        {
+          username: credentials.username,
+          password: credentials.password,
+        }
+      );
+
+      // Log để debug
+      console.log("Login response:", response.data);
+
+      if (response.data) {
+        dispatch({ type: "LOGIN_SUCCESS", payload: response.data });
+        navigate("/");
+      }
     } catch (err) {
-      dispatch({ type: "LOGIN_FAILURE", payload: err.response.data });
+      console.error("Login error:", err);
+      dispatch({ type: "LOGIN_FAILURE", payload: err.response?.data });
     }
   };
 
@@ -124,6 +145,7 @@ const Login = () => {
                 id="password"
                 onChange={handleChange}
                 className="o-nhap-lieu"
+                autoComplete="current-password"
               />
             </div>
 
