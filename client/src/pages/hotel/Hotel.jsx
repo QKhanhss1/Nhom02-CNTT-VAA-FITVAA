@@ -37,8 +37,8 @@ const Hotel = () => {
     return diffDays;
   }
   const days = dates?.[0]
-  ? dayDifference(dates[0].endDate, dates[0].startDate)
-  : 0; // default to 0 or any fallback value
+    ? dayDifference(dates[0].endDate, dates[0].startDate)
+    : 0; // default to 0 or any fallback value
 
 
   const handleOpen = (i) => {
@@ -114,11 +114,11 @@ const Hotel = () => {
               free airport taxi
             </span>
             <div className="hotelImages">
-              {data.photos?.map((photo, i) => (
+              {Array.isArray(data.photos) && data.photos.map((photoId, i) => (
                 <div className="hotelImgWrapper" key={i}>
                   <img
                     onClick={() => handleOpen(i)}
-                    src={photo}
+                    src={`http://localhost:8800/api/images/${photoId}`} // URL lấy ảnh từ server
                     alt=""
                     className="hotelImg"
                   />
@@ -148,7 +148,7 @@ const Hotel = () => {
           <Footer />
         </div>
       )}
-      {openModal && <Reserve setOpen={setOpenModal} hotelId={id}/>}
+      {openModal && <Reserve setOpen={setOpenModal} hotelId={id} />}
     </div>
   );
 };

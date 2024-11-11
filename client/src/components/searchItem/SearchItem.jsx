@@ -4,7 +4,11 @@ import "./searchItem.css";
 const SearchItem = ({ item }) => {
   return (
     <div className="searchItem">
-      <img src={item.photos[0]} alt="" className="siImg" />
+      <img
+        src={`http://localhost:8800/api/images/${item.photos}`} // Thay thế với URL API của bạn
+        alt=""
+        className="siImg"
+      />
       <div className="siDesc">
         <h1 className="siTitle">{item.name}</h1>
         <span className="siDistance">{item.distance}m from center</span>
@@ -27,7 +31,7 @@ const SearchItem = ({ item }) => {
           <span className="siPrice">${item.cheapestPrice}</span>
           <span className="siTaxOp">Includes taxes and fees</span>
           <Link to={`/hotels/${item._id}`}>
-          <button className="siCheckButton">See availability</button>
+            <button className="siCheckButton">See availability</button>
           </Link>
         </div>
       </div>
