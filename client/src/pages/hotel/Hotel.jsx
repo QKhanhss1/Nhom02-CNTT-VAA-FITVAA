@@ -41,7 +41,7 @@ const Hotel = () => {
     }
     try {
       const res = await axios.post(
-        "http://localhost:8800/api/favorite",
+        "http://localhost:8800/api/favorites",
         { hotelId: id },
         {
           withCredentials: true,
@@ -53,9 +53,14 @@ const Hotel = () => {
       setIsFavorite(true);
       console.log(res.data.message);
     } catch (error) {
-      console.error(error);
+      if (error.response) {
+        console.error(`Lỗi ${error.response.status}: ${error.response.data.message}`);
+      } else {
+        console.error("Lỗi:", error.message);
+      }
     }
   };
+
 
   const handleOpen = (i) => {
     setSlideNumber(i);
@@ -136,16 +141,16 @@ const Hotel = () => {
               free airport taxi
             </span>
             <div className="hotelImages">
-              
-                  <div className="hotelImgWrapper" >
-                    <img
-                      onClick={() => handleOpen()}
-                      src={`http://localhost:8800/api/images/${data.photos}`} 
-                      alt=""
-                      className="hotelImg"
-                    />
-                  </div>
-                
+
+              <div className="hotelImgWrapper" >
+                <img
+                  onClick={() => handleOpen()}
+                  src={`http://localhost:8800/api/images/${data.photos}`}
+                  alt=""
+                  className="hotelImg"
+                />
+              </div>
+
             </div>
             <div className="hotelDetails">
               <div className="hotelDetailsTexts">
