@@ -19,6 +19,11 @@ const Navbar = () => {
     navigate("/"); 
   };
 
+  // Thêm hàm điều hướng đến trang Yêu thích
+  const handleFavorites = () => {
+    navigate("/favorites");
+  };
+
   return (
     <div className="navbar">
       <div className="navContainer">
@@ -36,6 +41,9 @@ const Navbar = () => {
             </span>
             {dropdownOpen && (
               <div className="dropdownMenu">
+                <button className="favoriteButton" onClick={handleFavorites}>
+                  Yêu thích
+                </button>
                 <button className="logoutButton" onClick={handleLogout}>
                   Đăng xuất
                 </button>

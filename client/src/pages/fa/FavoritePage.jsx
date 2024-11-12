@@ -36,6 +36,12 @@ const FavoritePage = () => {
         {favorites.map((hotel) => (
           <div key={hotel._id} className="favoriteHotel">
             <h2>{hotel.name}</h2>
+            <img
+              src={`http://localhost:8800/api/images/${hotel.photos}`}
+              alt={hotel.name}
+              className="hotelImage"
+            />
+
             <p>{hotel.address}</p>
           </div>
         ))}

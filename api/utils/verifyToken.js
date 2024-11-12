@@ -2,8 +2,11 @@ import jwt from "jsonwebtoken";
 import { createError } from "../utils/error.js";
 
 export const verifyToken = (req, res, next) => {
-  const token = req.cookies.access_token;
-  console.log("Token:", token);
+  // Lấy token từ cookie hoặc từ header Authorization
+  const token = req.cookies.access_token || req.headers.authorization?.split(" ")[1];
+  
+  console.log("Token:", token); // Kiểm tra xem token có được nhận hay không
+
   if (!token) {
     return next(createError(401, "You are not authenticated!"));
   }
