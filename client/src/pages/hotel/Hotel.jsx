@@ -140,7 +140,7 @@ const Hotel = () => {
                   <div className="hotelImgWrapper" >
                     <img
                       onClick={() => handleOpen()}
-                      src={`http://localhost:8800/api/images/${data.photos}`} // URL láº¥y áº£nh tá»« server
+                      src={`http://localhost:8800/api/images/${data.photos}`} 
                       alt=""
                       className="hotelImg"
                     />
