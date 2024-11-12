@@ -25,13 +25,14 @@ const Navbar = () => {
         <Link to="/" style={{ color: "inherit", textDecoration: "none" }}>
           <span className="logo">SECONDBOOKING</span>
         </Link>
-        {user ? (
+        {console.log("USER DETAILS", user)}
+        {user && user.details ? (
           <div className="userMenu">
             <span
               className="userName"
               onClick={() => setDropdownOpen(!dropdownOpen)}
             >
-              {user.username}
+              {user.details.username}
             </span>
             {dropdownOpen && (
               <div className="dropdownMenu">

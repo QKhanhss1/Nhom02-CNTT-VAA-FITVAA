@@ -1,0 +1,16 @@
+.favoritePage {
+    padding: 20px;
+  }
+  
+  .favoriteHotels {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .favoriteHotel {
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 8px;
+  }
+  
