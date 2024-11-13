@@ -53,7 +53,7 @@ export const addFavorite = async (req, res) => {
 // Delete
 export const removeFavorite = async (req, res) => {
     try {
-        const hotelId = req.body.hotelId;
+        const hotelId = req.params.id;
         
         let favorite = await Favorite.findOne({ user: req.user.id });
         if (!favorite) return res.status(404).json({ message: "Danh sách yêu thích không tồn tại." });

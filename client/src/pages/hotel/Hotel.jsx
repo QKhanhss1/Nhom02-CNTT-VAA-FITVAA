@@ -5,11 +5,12 @@ import MailList from "../../components/mailList/MailList";
 import Footer from "../../components/footer/Footer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faCircleArrowLeft, faCircleArrowRight, faCircleXmark, faLocationDot } from "@fortawesome/free-solid-svg-icons";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import useFetch from "../../hooks/useFetch";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { SearchContext } from "../../context/SearchContext";
+import { FavoriteContext } from "../../context/FavoriteContext";
 import axios from "axios";
 import Reserve from "../../components/reserve/Reserve";
 
@@ -21,8 +22,9 @@ const Hotel = () => {
   const [openModal, setOpenModal] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
 
-  const { data, loading, error } = useFetch(`/hotels/find/${id}`);
+  const { data, loading } = useFetch(`/hotels/find/${id}`);
   const { user } = useContext(AuthContext);
+  const { favorites, dispatch } = useContext(FavoriteContext);
   const navigate = useNavigate();
   const { dates = [], options = {} } = useContext(SearchContext);
 
@@ -34,33 +36,38 @@ const Hotel = () => {
 
   const days = dates?.[0] ? dayDifference(dates[0].endDate, dates[0].startDate) : 0;
 
+  // Kiểm tra xem khách sạn có trong danh sách yêu thích không
+  useEffect(() => {
+    setIsFavorite(favorites.some((hotel) => hotel._id === id));
+  }, [favorites, id]);
+
   const handleFavoriteClick = async () => {
     if (!user) {
       navigate("/login");
       return;
     }
+
     try {
-      const res = await axios.post(
-        "http://localhost:8800/api/favorites",
-        { hotelId: id },
-        {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        }
-      );
-      setIsFavorite(true);
-      console.log(res.data.message);
-    } catch (error) {
-      if (error.response) {
-        console.error(`Lỗi ${error.response.status}: ${error.response.data.message}`);
+      if (isFavorite) {
+        // Xóa khỏi danh sách yêu thích
+        await axios.delete(`/favorites/${id}`, {
+          headers: { Authorization: `Bearer ${user.token}` },
+        });
+        dispatch({ type: "REMOVE_FAVORITE", payload: id });
       } else {
-        console.error("Lỗi:", error.message);
+        // Thêm vào danh sách yêu thích
+        await axios.post(
+          "/favorites",
+          { hotelId: id },
+          { headers: { Authorization: `Bearer ${user.token}` } }
+        );
+        dispatch({ type: "ADD_FAVORITE", payload: { _id: id } });
       }
+      setIsFavorite(!isFavorite); // Thay đổi trạng thái của `isFavorite`
+    } catch (error) {
+      console.error("Error updating favorites:", error);
     }
   };
-
 
   const handleOpen = (i) => {
     setSlideNumber(i);
@@ -134,15 +141,14 @@ const Hotel = () => {
               <span>{data.address}</span>
             </div>
             <span className="hotelDistance">
-              Excellent location â€“ {data.distance}m from center
+              Excellent location – {data.distance}m from center
             </span>
             <span className="hotelPriceHighlight">
               Book a stay over ${data.cheapestPrice} at this property and get a
               free airport taxi
             </span>
             <div className="hotelImages">
-
-              <div className="hotelImgWrapper" >
+              <div className="hotelImgWrapper">
                 <img
                   onClick={() => handleOpen()}
                   src={`http://localhost:8800/api/images/${data.photos}`}
@@ -150,7 +156,6 @@ const Hotel = () => {
                   className="hotelImg"
                 />
               </div>
-
             </div>
             <div className="hotelDetails">
               <div className="hotelDetailsTexts">
